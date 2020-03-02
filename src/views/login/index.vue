@@ -8,12 +8,12 @@
       <!-- 表单控件 -->
       <el-form style=" margin-top:20px; "  :model="ruleForm" :rules="rules" ref="loginForm">
         <!-- 手机号框 -->
-        <el-form-item  prop="name">
-           <el-input placeholder="请输入手机号" v-model="ruleForm.name"></el-input>
+        <el-form-item  prop="mobile">
+           <el-input placeholder="请输入手机号" v-model="ruleForm.mobile"></el-input>
        </el-form-item>
        <!-- 验证码框 -->
-        <el-form-item prop="region">
-           <el-input placeholder="请输入验证码"  style=" width:70% " v-model="ruleForm.region"></el-input>
+        <el-form-item prop="code">
+           <el-input placeholder="请输入验证码"  style=" width:70% " v-model="ruleForm.code"></el-input>
            <el-button plain style="float:right" >发送验证码</el-button>
        </el-form-item>
        <!-- 用户条款 -->
@@ -22,7 +22,7 @@
        </el-form-item>
        <!-- 点击登录 -->
         <el-form-item >
-            <el-button type="primary" @click="login(loginForm)" style="width:100%" >登录</el-button>
+            <el-button type="primary" @click="login" style="width:100%" >登录</el-button>
        </el-form-item>
       </el-form>
   </el-card>
@@ -35,15 +35,15 @@ export default {
   data () {
     return {
       ruleForm: { // 数据绑定
-        name: '', // 手机号
-        region: '', // 验证码
+        mobile: '', // 手机号
+        code: '', // 验证码
         delivery: false // 是否同意条款协议
       },
       rules: { // 表单内容校验规则表达式
-        name: [{ required: true, message: '请输入手机号', trigger: 'blur' }, {
+        mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }, {
           pattern: /^1[34578]\d{9}$/, message: '您输入的手机号格式不正确' // 正则表达式
         }], // 手机号的验证规则
-        region: [{ required: true, message: '请输入验证码', trigger: 'blur' }, {
+        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }, {
           pattern: /^\d{6}$/, message: '您输入的验证码格式不正确' // 正则表达式
         }], // 验证码的验证规则
         // 自定义校验 复选框  因为: required 不能校验 true 和 false
@@ -62,13 +62,15 @@ export default {
     }
   },
   methods: {
-    login (loginForm) {
-      this.$refs.loginForm.validate(function (vai) {
-        if (vai) {
-          console.log('校验通过')
-        } else {
-          console.log('校验失败')
-        }
+    login () {
+      this.$refs.loginForm.validate().then(() => {
+        this.$axios({
+          url: '/authorizations', // 请求地址
+          data: this.ruleForm,
+          method: 'post'
+        }).then(ser => {
+          console.log(ser)
+        })
       })
     }
   }
