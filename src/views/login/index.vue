@@ -69,7 +69,7 @@ export default {
           data: this.ruleForm,
           method: 'post'
         }).then(ser => {
-          console.log(ser)
+          window.localStorage.setItem('user-token', ser.data.data.token)
         })
       })
     }
