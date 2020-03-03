@@ -2,7 +2,10 @@
 <!-- 主页框架搭建 -->
 <!-- 左侧导航区域 -->
  <el-container>
-   <el-aside><h1>侧边栏</h1></el-aside>
+   <el-aside style="width: 230px;">
+     <layout>
+     </layout>
+     </el-aside>
    <!-- 右侧模块搭建 -->
  <el-container>
    <!-- 顶部操作栏 -->
@@ -18,8 +21,11 @@
 </template>
 
 <script>
+import layout from '@/components/home/layout-aside.vue'
 export default {
-
+  components: {
+    layout
+  }
 }
 </script>
 
