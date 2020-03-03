@@ -41,12 +41,23 @@ export default {
         Authorization: `Bearer ${token}` // 格式要求 Bearer +token
       }
     }).then(ser => {
-      this.userinfor = ser.data.data
+      this.userinfor = ser.data.data // 获取的数据赋值给 userinfor:用户个人信息
     })
   },
   methods: {
     handleCommand (command) {
-      this.$message('你点击的是' + command)
+      if (command === 'infor') {
+        alert('敬请期待!')
+        return
+      }
+      if (command === 'site') {
+        window.location.href = 'https://github.com/liuguang-1999?tab=repositories'
+        return
+      }
+      if (command === 'out') {
+        localStorage.removeItem('user-token')
+        this.$router.push('/login')
+      }
     }
   }
 }
