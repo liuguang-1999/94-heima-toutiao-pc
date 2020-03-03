@@ -1,15 +1,17 @@
 <template>
 <!-- 主页框架搭建 -->
-<!-- 左侧导航区域 -->
  <el-container>
+   <!-- 左侧导航区域 -->
    <el-aside style="width: 230px;">
-     <layout>
-     </layout>
+     <layoutaside>
+     </layoutaside>
      </el-aside>
    <!-- 右侧模块搭建 -->
  <el-container>
    <!-- 顶部操作栏 -->
-   <el-header><h1>顶部操作栏</h1></el-header>
+   <el-header>
+     <layoutheader></layoutheader>
+   </el-header>
    <!-- 主要容器区 -->
    <el-main>
      <h1>主要容器区</h1>
@@ -21,10 +23,12 @@
 </template>
 
 <script>
-import layout from '@/components/home/layout-aside.vue'
+import layoutaside from '@/components/home/layout-aside.vue'
+import layoutheader from '@/components/home/layout-header.vue'
 export default {
   components: {
-    layout
+    layoutaside,
+    layoutheader
   }
 }
 </script>
