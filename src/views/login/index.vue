@@ -70,6 +70,18 @@ export default {
           method: 'post'
         }).then(ser => {
           window.localStorage.setItem('user-token', ser.data.data.token)
+          this.$router.push('/home')
+          this.$message({
+            showClose: true,
+            message: '登陆成功',
+            type: 'success'
+          })
+        }).catch(() => {
+          this.$message({
+            showClose: true,
+            message: '用户名或密码错误',
+            type: 'error'
+          })
         })
       })
     }
