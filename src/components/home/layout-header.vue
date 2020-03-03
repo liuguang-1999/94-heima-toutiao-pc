@@ -9,16 +9,16 @@
   <!-- 右侧头部栏 -->
       <el-col :span="12" class="right">
          <el-row type="flex" justify="end" align="middle">
-          <img src="http://00.minipic.eastday.com/20170511/20170511110829_30d8ac8a4f22796d356187d5aa489584_5.jpeg" alt="">
+          <img :src="userinfor.photo" alt="">
           <!-- 下拉菜单 -->
-          <el-dropdown trigger="hover">
+          <el-dropdown trigger="hover" @command="handleCommand">
               <span class="el-dropdown-link" style="cursor: pointer;">
-                鎏光<i class="el-icon-arrow-down el-icon--right"></i>
+                {{userinfor.name}}<i class="el-icon-arrow-down el-icon--right"></i>
              </span>
              <el-dropdown-menu slot="dropdown" >
-                <el-dropdown-item>个人信息</el-dropdown-item>
-                <el-dropdown-item>Github地址</el-dropdown-item>
-                <el-dropdown-item>退出</el-dropdown-item>
+                <el-dropdown-item command="infor">个人信息</el-dropdown-item>
+                <el-dropdown-item command="site">Github地址</el-dropdown-item>
+                <el-dropdown-item command="out">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-row>
@@ -28,7 +28,27 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      userinfor: {} // 用户个人信息
+    }
+  },
+  created () {
+    const token = localStorage.getItem('user-token')
+    this.$axios({
+      url: '/user/profile', // 请求地址
+      headers: {
+        Authorization: `Bearer ${token}` // 格式要求 Bearer +token
+      }
+    }).then(ser => {
+      this.userinfor = ser.data.data
+    })
+  },
+  methods: {
+    handleCommand (command) {
+      this.$message('你点击的是' + command)
+    }
+  }
 }
 </script>
 
