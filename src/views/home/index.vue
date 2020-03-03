@@ -23,13 +23,9 @@
 </template>
 
 <script>
-import layoutaside from '@/components/home/layout-aside.vue'
-import layoutheader from '@/components/home/layout-header.vue'
+
 export default {
-  components: {
-    layoutaside,
-    layoutheader
-  }
+
 }
 </script>
 
