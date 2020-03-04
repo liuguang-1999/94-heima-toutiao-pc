@@ -13,7 +13,7 @@
      <layoutheader></layoutheader>
    </el-header>
    <!-- 主要容器区 -->
-   <el-main>
+   <el-main style="padding:0;">
      <h1>主要容器区</h1>
      <!-- 路由视口 -->
      <router-view></router-view>
