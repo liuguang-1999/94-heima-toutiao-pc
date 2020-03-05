@@ -8,7 +8,7 @@ import router from '@/router'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 配置公共的请求头
 axios.interceptors.request.use(function (config) {
   const token = localStorage.getItem('user-token')
-  config.headers.Authorization = `Bearer${token}`
+  config.headers.Authorization = `Bearer ${token}`
   return config
 }, function (error) {
   return Promise.reject(error)
