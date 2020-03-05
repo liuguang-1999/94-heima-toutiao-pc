@@ -69,7 +69,7 @@ export default {
           data: this.ruleForm,
           method: 'post'
         }).then(ser => {
-          window.localStorage.setItem('user-token', ser.data.data.token)
+          window.localStorage.setItem('user-token', ser.data.token)
           this.$router.push('/home')
           this.$message({
             showClose: true,

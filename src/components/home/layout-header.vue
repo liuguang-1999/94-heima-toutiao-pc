@@ -37,7 +37,7 @@ export default {
     this.$axios({
       url: '/user/profile' // 请求地址
     }).then(ser => {
-      this.userinfor = ser.data.data // 获取的数据赋值给 userinfor:用户个人信息
+      this.userinfor = ser.data // 获取的数据赋值给 userinfor:用户个人信息
     })
   },
   methods: {
