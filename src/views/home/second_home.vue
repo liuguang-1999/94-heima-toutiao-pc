@@ -1,12 +1,6 @@
 <template>
   <!-- 二级路由的默认组件 -->
   <div class="second-home">
-    <!-- 幻灯片 -->
-    <el-carousel :interval="4000" type="card" height="300px">
-      <el-carousel-item v-for="item in list" :key="item">
-         <img :src="item" alt="">
-      </el-carousel-item>
-    </el-carousel>
   </div>
 </template>
 
