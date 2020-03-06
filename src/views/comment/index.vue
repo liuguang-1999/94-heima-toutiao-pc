@@ -1,6 +1,6 @@
 <template>
-<el-card>
-    <!-- 防止面包屑组件 -->
+<el-card v-loading="loading"  element-loading-text="玩命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+    <!-- 防止面包屑组件  -->
     <bread-crumb slot="header">
     <!-- 评论管理 通过具名插槽给面包屑组件的插槽了 -->
     <template slot="title">
@@ -43,7 +43,8 @@ export default {
       },
       list: [
 
-      ]
+      ],
+      loading: false // 控制loading遮罩层的显示或者隐藏
     }
   },
   methods: {
@@ -53,6 +54,7 @@ export default {
       this.getComment()
     },
     getComment () {
+      this.loading = true // 打开遮罩层
       this.$axios({
         url: '/articles', // 请求地址
         params: {
@@ -61,8 +63,9 @@ export default {
           per_page: this.page.PageSize // 要获取条评论数据
         }
       }).then(ser => {
-        this.list = ser.data.results
-        this.page.total = ser.data.total_count
+        this.list = ser.data.results //  将返回结果的中 数组 给list
+        this.page.total = ser.data.total_count // 在获取完数据之后 将 总数赋值给 total
+        this.loading = false // 请求完毕 关闭遮罩层
       })
     },
     formatterBool (row, column, cellValue, index) {
