@@ -39,7 +39,7 @@ export default {
       page: {
         total: 0, // 默认的评论总条数
         currentPage: 1, // 默认的 页码 是第一页 这个属性决定当前页码是第几页 current-page
-        PageSize: 10 // 每页 显示的条数
+        PageSize: 12 // 每页 显示的条数
       },
       list: [
 

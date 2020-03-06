@@ -16,8 +16,11 @@ const routes = [{
     path: '',
     component: second
   }, {
-    path: 'comment',
-    component: () => import('@/views/comment')
+    path: 'comment', // 二级路由地址
+    component: () => import('@/views/comment') // 评论列表
+  }, {
+    path: 'material', // 二级路由地址
+    component: () => import('@/views/material') // 素材列表
   }]
 }, {
   path: '/login',
