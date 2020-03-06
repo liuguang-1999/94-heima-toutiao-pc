@@ -6,6 +6,7 @@
 
 <script>
 export default {
+  // http://attach.bbs.miui.com/forum/201111/21/205700txzuacubbcy91u99.jpg
   data () {
     return {
       list: [
@@ -21,8 +22,8 @@ export default {
 <style>
 .second-home {
   /* calc 计算的意思 在css中计算数值 用法  calc ( 四则运算  ) 变量之间 和运算符之间一定要有空格 */
-  height: calc(100vh - 122px);
+  height: calc(100vh - 60px);
   background-size: cover;
-  background-image: url("http://attach.bbs.miui.com/forum/201111/21/205700txzuacubbcy91u99.jpg");
+  background-image: url("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1583497055660&di=b69a7b98968854b05037e8b0b20ea4a6&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2017-10-16%2F59e426c79a278.jpg")
 }
 </style>

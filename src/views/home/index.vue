@@ -2,7 +2,7 @@
 <!-- 主页框架搭建 -->
  <el-container>
    <!-- 左侧导航区域 -->
-   <el-aside style="width: 230px;">
+   <el-aside style="width: 230px; background-color: #2e2f32">
      <layoutaside>
      </layoutaside>
      </el-aside>

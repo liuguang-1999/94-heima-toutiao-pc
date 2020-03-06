@@ -60,7 +60,7 @@ export default {
           url: '/comments/status', // 请求地址
           method: 'put', // 请求类型
           params: {
-            article_id: row.id // 要求参数的文章id
+            article_id: row.id.toString() // 要求参数的文章id
           },
           data: {
             allow_comment: !row.comment_status
