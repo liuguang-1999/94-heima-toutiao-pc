@@ -15,9 +15,11 @@
         <el-table-column :formatter="formatterBool" prop="comment_status" label="评论状态"></el-table-column>
         <el-table-column prop="total_comment_count" label="总评论数"></el-table-column>
         <el-table-column prop="fans_comment_count" label="粉丝评论数"></el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column label="操作">
+          <template slot-scope="obj">
           <el-button type="text" size="small">修改</el-button>
-          <el-button type="text" size="small">关闭评论</el-button>
+          <el-button @click="openOrClose(obj.row)" type="text" size="small">{{obj.row.comment_status?'关闭':'打开'}}评论</el-button>
+          </template>
         </el-table-column>
     </el-table>
 </el-card>
@@ -50,6 +52,29 @@ export default {
       // index 代表当前的索引
       // 该函数需要返回一个值 用来显示
       return cellValue ? '正常' : '关闭'
+    },
+    openOrClose (row) {
+      const mess = row.comment_status ? '关闭' : '打开'
+      this.$confirm(`是否确定${mess}评论`, '提示').then(() => {
+        this.$axios({
+          url: '/comments/status', // 请求地址
+          method: 'put', // 请求类型
+          params: {
+            article_id: row.id // 要求参数的文章id
+          },
+          data: {
+            allow_comment: !row.comment_status
+          }
+        }).then(ser => {
+          //   成功了 提示个消息 然后 重新拉取数据4
+          this.$message.success(`${mess}评论成功`)
+          //  重新拉取数据
+          this.getComment() // 调用重新拉取数据的方法
+        }).catch(() => {
+          //   表示失败了 会进入到catch
+          this.$message.error(`${mess}评论失败`)
+        })
+      })
     }
   },
   created () {
