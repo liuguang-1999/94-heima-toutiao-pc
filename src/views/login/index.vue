@@ -98,6 +98,7 @@ export default {
   justify-content: center;
   align-items: center;
   .box-card {
+    background-color: rgba(3,24,10,0.1);
     width: 500px;
     height: 360px;
     .title {
