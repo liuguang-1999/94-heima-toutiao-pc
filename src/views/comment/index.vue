@@ -22,6 +22,13 @@
           </template>
         </el-table-column>
     </el-table>
+    <!-- 分页器 加了一个 外容器 需要外容器的布局属性控制分页器 -->
+    <el-row style="height:80px;" type="flex" justify="center" align="middle">
+    <!-- 分页器 -->
+    <el-pagination background layout="prev, pager, next" :total="page.total" :current-page="page.currentPage" :page-size="page.PageSize" @current-change="changepage">
+
+    </el-pagination>
+    </el-row>
 </el-card>
 </template>
 
@@ -29,20 +36,33 @@
 export default {
   data () {
     return {
+      page: {
+        total: 0, // 默认的评论总条数
+        currentPage: 1, // 默认的 页码 是第一页 这个属性决定当前页码是第几页 current-page
+        PageSize: 10 // 每页 显示的条数
+      },
       list: [
 
       ]
     }
   },
   methods: {
+    // 点击且页码 newPage 可以拿到最新页码
+    changepage (newPage) {
+      this.page.currentPage = newPage
+      this.getComment()
+    },
     getComment () {
       this.$axios({
         url: '/articles', // 请求地址
         params: {
-          response_type: 'comment' // 此参数用来 控制获取数据的类型
+          response_type: 'comment', // 此参数用来 控制获取数据的类型
+          page: this.page.currentPage, // 查第几页的评论数据
+          per_page: this.page.PageSize // 要获取条评论数据
         }
       }).then(ser => {
         this.list = ser.data.results
+        this.page.total = ser.data.total_count
       })
     },
     formatterBool (row, column, cellValue, index) {
