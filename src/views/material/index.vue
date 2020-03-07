@@ -24,8 +24,8 @@
         <el-tab-pane label="全部素材" name="all" class="">
           <!-- 生成页面 结构 -->
           <div class='img-list'>
-            <el-card v-for="item in list" :key="item.id" class="img-card">
-              <img :src="item.url" alt="">
+            <el-card v-for="(item,index) in list" :key="item.id" class="img-card">
+              <img :src="item.url" alt="" @click="selectImg(index)">
               <el-row class="operate" type='flex' align="middle" justify="space-around">
                  <i class='el-icon-star-on' @click="collectOrCancel(item)" :style="{color:item.is_collected?'red':'black'}" style="cursor: pointer;"></i>
                  <i class='el-icon-delete-solid' @click="delMaterial(item)" style="cursor: pointer;"></i>
@@ -36,8 +36,8 @@
         <el-tab-pane label="收藏素材" name="collect">
           <!-- 生成页面 结构 -->
           <div class='img-list'>
-            <el-card v-for="item in list" :key="item.id" class="img-card">
-              <img :src="item.url" alt="">
+            <el-card v-for="(item,index) in list" :key="item.id" class="img-card">
+              <img :src="item.url" alt="" @click="selectImg(index)">
             </el-card>
           </div>
         </el-tab-pane>
@@ -49,6 +49,15 @@
 
   </el-pagination>
     </el-row>
+    <!-- 放置一个查看大图组件  -->
+    <el-dialog :visible="dialogVisible" @close="dialogVisible = false" @opened="openEnd">
+      <!-- 放置一个 轮播图 -->
+      <el-carousel indicator-position="outside" height='400px' ref="myCarousel">
+        <el-carousel-item v-for="item in list" :key="item" >
+          <img :src="item.url" alt="" style="width:100%;height:100%;">
+        </el-carousel-item>
+      </el-carousel>
+    </el-dialog>
  </el-card>
 </template>
 
@@ -63,11 +72,21 @@ export default {
         currentPage: 1, // 默认第一页
         total: 0, // 当前总数
         pageSize: 10 // 每页多少条
-      }
+      },
+      dialogVisible: false, // 控制显示隐藏
+      clickIndex: -1
     }
   },
   methods: {
-
+    openEnd () {
+      // 这个时候已经打开结束 ref已经有值 可以通过ref进行设置了
+      this.$refs.myCarousel.setActiveItem(this.clickIndex) // 尝试通过这种方式设置index
+    },
+    // 图片记忆 点击时调用
+    selectImg (index) {
+      this.clickIndex = index // 将索引赋值
+      this.dialogVisible = true // 打开索引
+    },
     // 删除方法
     delMaterial (row) {
       this.$confirm('您确定要删除该图片吗?', '提示').then(() => {
