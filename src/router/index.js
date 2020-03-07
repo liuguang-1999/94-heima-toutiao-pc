@@ -21,6 +21,9 @@ const routes = [{
   }, {
     path: 'material', // 二级路由地址
     component: () => import('@/views/material') // 素材列表
+  }, {
+    path: 'articles', // 二级路由地址
+    component: () => import('@/views/articles') // 内容列表
   }]
 }, {
   path: '/login',
