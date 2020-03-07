@@ -17,8 +17,8 @@
             <el-card v-for="item in list" :key="item.id" class="img-card">
               <img :src="item.url" alt="">
               <el-row class="operate" type='flex' align="middle" justify="space-around">
-                <i class='el-icon-star-on'></i>
-                <i class='el-icon-delete-solid'></i>
+                <a href="javascript:alert('敬请期待!');"><i class='el-icon-star-on'></i></a>
+                <a href="javascript:alert('敬请期待!');"><i class='el-icon-delete-solid'></i></a>
               </el-row>
             </el-card>
           </div>
@@ -32,6 +32,13 @@
           </div>
         </el-tab-pane>
     </el-tabs>
+    <!-- 放置公共分页 -->
+    <el-row type="flex" justify="center" align="middle" style="height:80px;">
+  <!-- 放置分页total总条数 current-page当前页码page-size 每页多少条数据 -->
+  <el-pagination background :total="page.total" :current-page="page.currentPage" :page-size="page.pageSize" layout="prev, pager, next" @current-change="changePage">
+
+  </el-pagination>
+    </el-row>
  </el-card>
 </template>
 
@@ -41,25 +48,40 @@ export default {
     return {
       activeName: 'all', // 默认的选中 状态
       list: [], // 定义list 空数组 向接口中获取数据 赋值给这个list 空数组
-      loading: false // 遮罩层
+      loading: false, // 遮罩层
+      page: { // 放置一个page 对象 储存分页信息
+        currentPage: 1, // 默认第一页
+        total: 0, // 当前总数
+        pageSize: 10 // 每页多少条
+      }
     }
   },
   methods: {
+    changePage (newPage) {
+      // 传入一个新页码
+      this.page.currentPage = newPage // 将新页码赋值给页码数据
+      this.getMaterial() // 获取数据
+    },
     // 获取数据 接口
     getMaterial () {
       this.loading = true // 打开遮罩层
       this.$axios({
         url: '/user/images', // 请求地址
         params: {
-          collect: this.activeName === 'collect' // 传入 标签页值获取数据
+          collect: this.activeName === 'collect', // 传入 标签页值获取数据
+          page: this.page.currentPage, // 取页码变量中的值 因为只要页码变量一变 获取的数据跟着变
+          per_page: this.page.pageSize // 获取每页数量
         },
         data: {}
       }).then(ser => {
         this.list = ser.data.results
+        this.page.total = ser.data.total_count // 总数  全部素材的总数  收藏素材的总数 总数 跟随 当前页签变化而变化
         this.loading = false // 请求完毕 关闭遮罩层
       })
     },
+    // 切换页签事件
     changeTab () {
+      this.page.currentPage = 1 // 将页码重置为第一页 因为分类变了 数据变了
       this.getMaterial()
     }
   },
