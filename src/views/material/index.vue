@@ -27,8 +27,8 @@
             <el-card v-for="item in list" :key="item.id" class="img-card">
               <img :src="item.url" alt="">
               <el-row class="operate" type='flex' align="middle" justify="space-around">
-                <a href="javascript:alert('敬请期待!');"><i class='el-icon-star-on'></i></a>
-                <a href="javascript:alert('敬请期待!');"><i class='el-icon-delete-solid'></i></a>
+                 <i class='el-icon-star-on' @click="collectOrCancel(item)" :style="{color:item.is_collected?'red':'black'}" style="cursor: pointer;"></i>
+                 <i class='el-icon-delete-solid' @click="delMaterial(item)" style="cursor: pointer;"></i>
               </el-row>
             </el-card>
           </div>
@@ -67,6 +67,34 @@ export default {
     }
   },
   methods: {
+
+    // 删除方法
+    delMaterial (row) {
+      this.$confirm('您确定要删除该图片吗?', '提示').then(() => {
+        this.$axios({
+          url: `/user/images/${row.id}`,
+          method: 'DELETE'
+        }).then(ser => {
+          this.getMaterial()
+        }).catch(() => {
+          this.$message.error('删除失败')
+        })
+      })
+    },
+    // 取消收藏&收藏方法
+    collectOrCancel (row) {
+      this.$axios({
+        url: `/user/images/${row.id}`, // 请求地址
+        method: 'put',
+        data: {
+          collect: !row.is_collected // 取反 收藏&不收藏相互取反
+        }
+      }).then(ser => {
+        this.getMaterial()
+      }).catch(() => {
+        this.$message.error('操作失败')
+      })
+    },
     // 上传文件自定义方法
     uploadImg (params) {
       //  params.file 就是需要上传的图片文件
