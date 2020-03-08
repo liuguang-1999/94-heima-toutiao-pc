@@ -39,13 +39,15 @@
          <span>共找到1000条符合条件的内容</span>
       </el-row>
       <!-- 内容列表 -->
-      <div class="article-item">
+      <div class="article-item" v-for="item in list" :key="item.id.toString()">
           <div class="left">
-              <img src="../../assets/default.gif" alt="">
+              <img :src=" item.cover.images.length ?  item.cover.images[0] : defaultImg " alt="">
               <div class="info">
-                  <span>祖国</span>
-                   <el-tag class="tag"> 草稿 </el-tag>
-                  <span class="date">07点52分</span>
+                  <span>{{item.title}}</span>
+                  <!-- 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除 -->
+                   <!-- 只是改变显示的格式 可以用过滤器   两个过滤器 分别处理   显示文本 和 标签类型-->
+                   <el-tag class="tag" :type="item.status | filterType"> {{item.status | filterStatus}} </el-tag>
+                  <span class="date">{{item.pubdate}}</span>
               </div>
           </div>
           <div class="right">
@@ -65,10 +67,46 @@ export default {
         channel_id: null, // 表示没有任何的频道
         dateRange: [] // 日期范围
       },
-      channels: [] // 专门来接收频道的数据
+      channels: [], // 专门来接收频道的数据
+      list: [], // 定义个list 数组接收文章列表
+      defaultImg: require('../../assets/default.gif') // 地址对应的文件变成了变量 在编译的时候会被拷贝到对应位置
+    }
+  },
+  filters: {
+    filterStatus (value) {
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2 :
+          return '已发表'
+        case 3:
+          return '审核失败'
+      }
+    },
+    filterType (value) {
+      switch (value) {
+        case 0:
+          return 'warning' // 草稿的时候 警告
+        case 1:
+          return 'info' // 待审核
+        case 2 :
+          return '' // 已发表
+        case 3:
+          return 'danger' // 失败 错误
+      }
     }
   },
   methods: {
+    // 获取文章列表
+    getArticles () {
+      this.$axios({
+        url: '/articles' // 请求地址
+      }).then(ser => {
+        this.list = ser.data.results // 获取文章列表 赋值给list
+      })
+    },
     // 获取频道数据
     getChannels () {
       this.$axios({
@@ -80,6 +118,7 @@ export default {
   },
   created () {
     this.getChannels()
+    this.getArticles() // 手动调用获取文章数据
   }
 }
 </script>
