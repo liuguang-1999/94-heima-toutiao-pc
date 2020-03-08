@@ -11,15 +11,19 @@
        <el-form style="padding-left:70px;">
            <el-form-item label="文章状态:">
                <!-- 放置单选框组 -->
+               <!-- 监听=>值 改变的第一种方式 -->
+               <!-- <el-radio-group v-model="searchForm.status" @change="changeCondition"> -->
                <el-radio-group v-model="searchForm.status">
-                   <el-radio :label="1">全部</el-radio>
-                   <el-radio :label="2">草稿</el-radio>
-                   <el-radio :label="4">待审核</el-radio>
-                   <el-radio :label="5">审核通过</el-radio>
-                   <el-radio :label="6">审核失败</el-radio>
+                   <el-radio :label="5">全部</el-radio>
+                   <el-radio :label="0">草稿</el-radio>
+                   <el-radio :label="1">待审核</el-radio>
+                   <el-radio :label="2">审核通过</el-radio>
+                   <el-radio :label="3">审核失败</el-radio>
                </el-radio-group>
            </el-form-item>
            <el-form-item label="频道类型:">
+              <!-- 监听=>值 改变的第一种方式 -->
+               <!-- <el-select placeholder="请选择频道"  v-model="searchForm.channel_id" @change="changeCondition"> -->
                <el-select placeholder="请选择频道"  v-model="searchForm.channel_id">
                      <!-- el-option是下拉的选项 label是显示值  value是绑定的值 -->
                    <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id">
@@ -29,7 +33,9 @@
            </el-form-item>
            <el-form-item label="日期范围:" >
                <!-- 日期选择组件 -->
-               <el-date-picker type='daterange' v-model="searchForm.dateRange">
+                <!-- 监听=>值 改变的第一种方式 -->
+               <!-- <el-date-picker type='daterange' v-model="searchForm.dateRange"   value-format="yyyy-MM-dd" @change="changeCondition"> -->
+               <el-date-picker type='daterange' v-model="searchForm.dateRange"   value-format="yyyy-MM-dd">
 
                </el-date-picker>
            </el-form-item>
@@ -39,7 +45,8 @@
          <span>共找到1000条符合条件的内容</span>
       </el-row>
       <!-- 内容列表 -->
-      <div class="article-item" v-for="item in list" :key="item.id.toString()">
+      <div v-loading="loading" element-loading-text="拼命加载中"  element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+        <div class="article-item" v-for="item in list" :key="item.id.toString()">
           <div class="left">
               <img :src=" item.cover.images.length ?  item.cover.images[0] : defaultImg " alt="">
               <div class="info">
@@ -54,6 +61,7 @@
              <span><i class="el-icon-edit"></i> 修改</span>
             <span><i class="el-icon-delete"></i> 删除</span>
           </div>
+       </div>
       </div>
    </el-card>
 </template>
@@ -63,13 +71,23 @@ export default {
   data () {
     return {
       searchForm: {
-        status: 1, // 默认状态是全部
+        status: 5, // 默认状态是全部
         channel_id: null, // 表示没有任何的频道
         dateRange: [] // 日期范围
       },
       channels: [], // 专门来接收频道的数据
       list: [], // 定义个list 数组接收文章列表
-      defaultImg: require('../../assets/default.gif') // 地址对应的文件变成了变量 在编译的时候会被拷贝到对应位置
+      defaultImg: require('../../assets/default.gif'), // 地址对应的文件变成了变量 在编译的时候会被拷贝到对应位置
+      loading: false // 等待加载功能
+    }
+  },
+  // 第二种 监听数据变换的方案
+  watch: {
+    searchForm: {
+      deep: true, // 固定写法 表示 开启深度监听模式 searchForm中的任何值发生改变 都会被获取到
+      handler () { // 固定写法 表示 统一调用改变条件的 方法
+        this.changeCondition()
+      }
     }
   },
   filters: {
@@ -99,12 +117,27 @@ export default {
     }
   },
   methods: {
+    // 第一种监听模块改变事件方案
+    changeCondition () {
+      // 收集改变的数据
+      const params = {
+        // 文章状态，2-草稿，4-待审核，5-审核通过，6-审核失败，4-已删除，不传为全部1
+        status: this.searchForm.status === 5 ? null : this.searchForm.status,
+        channel_id: this.searchForm.channel_id,
+        begin_pubdate: this.searchForm.dateRange.length ? this.searchForm.dateRange[0] : null,
+        end_pubdate: this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null
+      }
+      this.getArticles(params)
+    },
     // 获取文章列表
-    getArticles () {
+    getArticles (params) {
+      this.loading = true // 发请求之前打开 等待加载
       this.$axios({
-        url: '/articles' // 请求地址
+        url: '/articles', // 请求地址
+        params // ES6 简写
       }).then(ser => {
         this.list = ser.data.results // 获取文章列表 赋值给list
+        this.loading = false // 求情回来了 关闭等待加载
       })
     },
     // 获取频道数据
