@@ -17,10 +17,10 @@
        <!-- 单选框组 -->
        <!-- model 需要绑定的数据是 封面cover下面的type(是个只是标制) -->
        <el-radio-group v-model="publishForm.cover.type">
-         <el-radio :lang="1">单图</el-radio>
-         <el-radio :lang="3">三图</el-radio>
-         <el-radio :lang="0">无图</el-radio>
-         <el-radio :lang="-1">自动</el-radio>
+         <el-radio :label="1">单图</el-radio>
+         <el-radio :label="3">三图</el-radio>
+         <el-radio :label="0">无图</el-radio>
+         <el-radio :label="-1">自动</el-radio>
        </el-radio-group>
      </el-form-item>
      <!-- 频道下拉框 -->
@@ -30,9 +30,9 @@
          <el-option  v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
        </el-select>
      </el-form-item>
-     <el-form-item label="">
-       <el-button type="primary" @click="publish">发表文章</el-button>
-       <el-button>存入草稿</el-button>
+     <el-form-item>
+       <el-button type="primary" @click="publish(false)">发表文章</el-button>
+       <el-button @click="publish(true)">存入草稿</el-button>
      </el-form-item>
     </el-form>
   </el-card>
@@ -42,13 +42,13 @@
 export default {
   data () {
     return {
-      channels: [], // 被53行赋值
+      channels: [], // 被赋值
       publishForm: {
         title: '', // 文章标题
         content: '', // 文章内容
         cover: { // 封面
           type: 0, // 封面类型 -1 是自动 0是无图  1 是单图 3 是三图
-          imgagess: [] // 对应type  假如 type 为1 images中应该有一个值 假如为3 images应该有三个值 0 images为空
+          images: [] // 对应type  假如 type 为1 images中应该有一个值 假如为3 images应该有三个值 0 images为空
         },
         channel_id: null // id频道
       },
@@ -68,15 +68,11 @@ export default {
           required: true, // 必填项
           message: '文章标题不能为空', // 错误信息提示文本
           trigger: 'blur' // 校验规则 光标离开时进行校验表单
-        }, {
-
         }],
         channel_id: [{
           required: true, // 必填项
           message: '频道内容不能为空', // 错误信息提示文本
           trigger: 'blur' // 校验规则 光标离开时进行校验表单
-        }, {
-
         }]
       }
     }
@@ -91,8 +87,22 @@ export default {
         this.channels = ser.data.channels
       })
     },
-    publish () {
-      this.$refs.myForm.validate()
+    publish (draft) {
+      this.$refs.myForm.validate().then(() => {
+        this.$axios({
+          url: '/articles', // 请求数据
+          method: 'post',
+          params: { draft },
+          data: this.publishForm // 请求体参数
+        }).then(() => {
+          this.$message.success('操作成功!') // 成功提示
+          // 如果发布成功了 就应该去 内容列表
+          this.$router.push('/home/articles')
+        }).catch(() => {
+          debugger
+          this.$message.error('操作失败!') // 失败提示
+        })
+      })
     }
   },
   created () {
