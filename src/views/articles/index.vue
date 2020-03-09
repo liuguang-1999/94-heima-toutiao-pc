@@ -59,7 +59,8 @@
           </div>
           <div class="right">
              <span><i class="el-icon-edit"></i> 修改</span>
-            <span><i class="el-icon-delete"></i> 删除</span>
+             <!-- 绑定 删除方法 需要传回被删除的ID -->
+            <span @click=" delMater(item.id.toString()) "><i class="el-icon-delete"></i> 删除</span>
           </div>
        </div>
       </div>
@@ -130,17 +131,31 @@ export default {
     }
   },
   methods: {
+    // 删除素材方法
+    delMater (id) {
+      this.$confirm('您确定要删除次条信息吗？', '提示').then(() => {
+        this.$axios({
+          url: `/articles/${id}`, // 请求地址
+          method: 'DELETE' // 请求方式
+        }).then(ser => {
+          // this.getArticles() // 不能这么写 因为 删除后会丢失当前的页码和数据页
+          this.changeCondition()
+        }).catch(() => {
+          this.$message.error('删除失败,您不能删除非草稿信息')
+        })
+      })
+    },
     // 监听方法 监听页码改变
     changePage (newPage) {
       this.pageSize.CurrentPage = newPage
-      this.getArticles() // 直接去调用 方法
+      this.changeCondition() // 直接去调用 方法
     },
     // 第一种监听模块改变事件方案
     changeCondition () {
       // 收集改变的数据
       const params = {
-        page: this.pageSize.CurrentPage, // 获取当前最新页码 发请求
-        per_page: this.pageSize.PageSize, // 获取当前最新 每页显示多少条 发请求
+        page: this.pageSize.CurrentPage, // 监听当前最新页码 发请求
+        per_page: this.pageSize.PageSize, // 监听当前最新 每页显示多少条 发请求
         // 文章状态，2-草稿，4-待审核，5-审核通过，6-审核失败，4-已删除，不传为全部1
         status: this.searchForm.status === 5 ? null : this.searchForm.status,
         channel_id: this.searchForm.channel_id,
