@@ -58,7 +58,9 @@
               </div>
           </div>
           <div class="right">
-             <span><i class="el-icon-edit"></i> 修改</span>
+            <!-- 第一种跳转方式 -->
+             <!-- <span @click="toPublish()"><i class="el-icon-edit"></i> 修改</span> -->
+             <span @click=" $router.push(`/home/publish/${item.id}`) "><i class="el-icon-edit"></i> 修改</span>
              <!-- 绑定 删除方法 需要传回被删除的ID -->
             <span @click=" delMater(item.id.toString()) "><i class="el-icon-delete"></i> 删除</span>
           </div>
@@ -131,6 +133,11 @@ export default {
     }
   },
   methods: {
+    // 去发布文章页面
+    // 第一种跳转方式
+    toPublish () {
+      this.$router.push('/home/publish')
+    },
     // 删除素材方法
     delMater (id) {
       this.$confirm('您确定要删除次条信息吗？', '提示').then(() => {
