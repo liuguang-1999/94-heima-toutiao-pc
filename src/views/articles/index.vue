@@ -63,6 +63,13 @@
           </div>
        </div>
       </div>
+      <!-- 放置分页组件 -->
+      <el-row type="flex" justify="center" align="middle" style='height:80px;'>
+        <!-- 放置分页器 -->
+        <el-pagination background layout="prev, pager, next" :current-page="pageSize.CurrentPage" :page-size="pageSize.PageSize" :total="pageSize.total" @current-change=" changePage ">
+
+        </el-pagination>
+      </el-row>
    </el-card>
 </template>
 
@@ -70,6 +77,11 @@
 export default {
   data () {
     return {
+      pageSize: {
+        CurrentPage: 1, // 当前页码
+        PageSize: 10, // 每页显示多少条
+        total: 0 // 总条目数量
+      },
       searchForm: {
         status: 5, // 默认状态是全部
         channel_id: null, // 表示没有任何的频道
@@ -86,6 +98,7 @@ export default {
     searchForm: {
       deep: true, // 固定写法 表示 开启深度监听模式 searchForm中的任何值发生改变 都会被获取到
       handler () { // 固定写法 表示 统一调用改变条件的 方法
+        this.pageSize.CurrentPage = 1
         this.changeCondition()
       }
     }
@@ -117,15 +130,22 @@ export default {
     }
   },
   methods: {
+    // 监听方法 监听页码改变
+    changePage (newPage) {
+      this.pageSize.CurrentPage = newPage
+      this.getArticles() // 直接去调用 方法
+    },
     // 第一种监听模块改变事件方案
     changeCondition () {
       // 收集改变的数据
       const params = {
+        page: this.pageSize.CurrentPage, // 获取当前最新页码 发请求
+        per_page: this.pageSize.PageSize, // 获取当前最新 每页显示多少条 发请求
         // 文章状态，2-草稿，4-待审核，5-审核通过，6-审核失败，4-已删除，不传为全部1
         status: this.searchForm.status === 5 ? null : this.searchForm.status,
         channel_id: this.searchForm.channel_id,
-        begin_pubdate: this.searchForm.dateRange.length ? this.searchForm.dateRange[0] : null,
-        end_pubdate: this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null
+        begin_pubdate: this.searchForm.dateRange && this.searchForm.dateRange.length ? this.searchForm.dateRange[0] : null,
+        end_pubdate: this.searchForm.dateRange && this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null
       }
       this.getArticles(params)
     },
@@ -138,6 +158,7 @@ export default {
       }).then(ser => {
         this.list = ser.data.results // 获取文章列表 赋值给list
         this.loading = false // 求情回来了 关闭等待加载
+        this.pageSize.total = ser.data.total_count // 将求回来的总页码 赋值给total
       })
     },
     // 获取频道数据
