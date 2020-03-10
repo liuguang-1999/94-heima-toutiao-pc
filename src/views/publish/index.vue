@@ -78,6 +78,14 @@ export default {
     }
   },
   methods: {
+    // 根据id 获取文章详情
+    getArticleById (id) {
+      this.$axios({
+        url: `articles/${id}`
+      }).then(ser => {
+        this.publishForm = ser.data // 将请求回来的数据 赋值给表单数据
+      })
+    },
     getChannels () {
       // 获取频道数据
       this.$axios({
@@ -89,9 +97,10 @@ export default {
     },
     publish (draft) {
       this.$refs.myForm.validate().then(() => {
+        const { articleId } = this.$route.params
         this.$axios({
-          url: '/articles', // 请求数据
-          method: 'post',
+          url: articleId ? `/articles/${articleId}` : '/articles', // 根据场景决定用什么地址
+          method: articleId ? 'put' : 'post',
           params: { draft },
           data: this.publishForm // 请求体参数
         }).then(() => {
@@ -108,6 +117,13 @@ export default {
   created () {
     // 调用获取频道数据 方法
     this.getChannels()
+    const { articleId } = this.$route.params
+    // 第一种写法
+    /*  if (articleId) {
+      this.getArticleById(articleId)
+    } */
+    // 优化写法
+    articleId && this.getArticleById(articleId)
   }
 }
 </script>
