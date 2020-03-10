@@ -42,6 +42,32 @@
 
 <script>
 export default {
+  watch: {
+    // watch 是监听data中的数据中的变化的
+    // 路由是在初始化之后  会把 $router 放置在页面的data数据中
+    $route: function (to, from) { // 同组件切换 页面不销毁 处理方法
+      // 监听 route 的变化
+      // to表示新的路由地址对象
+      // from 是旧的路由地址对象
+      // 根据to属性中的 params的articleId的变化 来决定 是不是改变数据
+      // 如果有articleId  应该获取编辑文章的数据
+      // 如果没有articleId 应该将表单数据设置为空
+      if (!to.params.articleId) {
+        // 如果这个 id 他不存在 就初始化里面的值 还原他的默认值
+        this.publishForm = {
+          title: '', // 文章标题
+          content: '', // 文章内容
+          cover: { // 封面
+            type: 0, // 封面类型 -1 是自动 0是无图  1 是单图 3 是三图
+            images: [] // 对应type  假如 type 为1 images中应该有一个值 假如为3 images应该有三个值 0 images为空
+          },
+          channel_id: null // id频道
+        }
+        return
+      }
+      this.getArticleById(to.params.articleId)
+    }
+  },
   data () {
     return {
       channels: [], // 被赋值
