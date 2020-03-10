@@ -16,7 +16,6 @@
      <el-form-item label="封面" prop="cover">
        <!-- 单选框组 -->
        <!-- model 需要绑定的数据是 封面cover下面的type(是个只是标制) -->
-       {{ publishForm.cover }}
        <el-radio-group v-model="publishForm.cover.type" style="margin-top:100px;" @change=" changeType ">
          <el-radio :label="1">单图</el-radio>
          <el-radio :label="3">三图</el-radio>
@@ -24,6 +23,8 @@
          <el-radio :label="-1">自动</el-radio>
        </el-radio-group>
      </el-form-item>
+     <!-- 放置自定义的封面组件 -->
+     <cover-image :list=" publishForm.cover.images "></cover-image>
      <!-- 频道下拉框 -->
      <el-form-item label="频道" prop="channel_id">
        <el-select placeholder="请选择频道" v-model="publishForm.channel_id">
