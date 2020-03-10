@@ -16,7 +16,8 @@
      <el-form-item label="封面" prop="cover">
        <!-- 单选框组 -->
        <!-- model 需要绑定的数据是 封面cover下面的type(是个只是标制) -->
-       <el-radio-group v-model="publishForm.cover.type" style="margin-top:100px;">
+       {{ publishForm.cover }}
+       <el-radio-group v-model="publishForm.cover.type" style="margin-top:100px;" @change=" changeType ">
          <el-radio :label="1">单图</el-radio>
          <el-radio :label="3">三图</el-radio>
          <el-radio :label="0">无图</el-radio>
@@ -78,6 +79,16 @@ export default {
     }
   },
   methods: {
+    // 监听单选框组 值改变的事件
+    changeType () {
+      if (this.publishForm.cover.type === 1) {
+        this.publishForm.cover.images = [''] // id 值等于1时数组内为 一个空字符串
+      } else if (this.publishForm.cover.type === 3) {
+        this.publishForm.cover.images = ['', '', ''] // id 值等于1时数组内为 三个空字符串
+      } else {
+        this.publishForm.cover.images = [] // 及不等于1 & 3 时直接空数组
+      }
+    },
     // 根据id 获取文章详情
     getArticleById (id) {
       this.$axios({
