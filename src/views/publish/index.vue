@@ -11,12 +11,12 @@
      </el-form-item>
      <el-form-item label="内容" prop="content">
        <!-- 多行输入框 -->
-       <el-input type="textarea" :rows="5" placeholder="请输入内容" style="width:40%;" v-model="publishForm.content"></el-input>
+       <quill-editor placeholder="请输入内容"  v-model="publishForm.content"  style="height:450px"></quill-editor>
      </el-form-item>
      <el-form-item label="封面" prop="cover">
        <!-- 单选框组 -->
        <!-- model 需要绑定的数据是 封面cover下面的type(是个只是标制) -->
-       <el-radio-group v-model="publishForm.cover.type">
+       <el-radio-group v-model="publishForm.cover.type" style="margin-top:100px;">
          <el-radio :label="1">单图</el-radio>
          <el-radio :label="3">三图</el-radio>
          <el-radio :label="0">无图</el-radio>
