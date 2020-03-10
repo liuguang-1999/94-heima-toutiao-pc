@@ -27,6 +27,9 @@ const routes = [{
   }, {
     path: 'publish/:articleId?', // 二级路由地址
     component: () => import('@/views/publish')
+  }, {
+    path: 'account',
+    component: () => import('@/views/account')
   }]
 }, {
   path: '/login',
