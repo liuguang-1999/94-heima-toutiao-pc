@@ -24,7 +24,7 @@
        </el-radio-group>
      </el-form-item>
      <!-- 放置自定义的封面组件 -->
-     <cover-image :list=" publishForm.cover.images "></cover-image>
+     <cover-image :list=" publishForm.cover.images " @selectTwoImg=" receiveImg "></cover-image>
      <!-- 频道下拉框 -->
      <el-form-item label="频道" prop="channel_id">
        <el-select placeholder="请选择频道" v-model="publishForm.channel_id">
@@ -80,6 +80,13 @@ export default {
     }
   },
   methods: {
+    // 接收传递过来的参数 中间经过了 二次传递 传递入口代码 27行
+    receiveImg (url, index) { // 需要接受 两个参数 一个是 url 地址 另一个是 点击了 那张图片的 索引
+      // 有了需要的 url 和 索引了 这样就可以 作改变数据操作了
+      // 用简单的方式 去改变数组里面的值
+      // 第一位是索引、第二位是要删除的个数、第三位参数是 要替换的参数 变量
+      this.publishForm.cover.images.splice(index, 1, url)
+    },
     // 监听单选框组 值改变的事件
     changeType () {
       if (this.publishForm.cover.type === 1) {
