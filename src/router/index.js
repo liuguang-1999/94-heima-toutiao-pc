@@ -7,6 +7,9 @@ import second from '@/views/home/second_home.vue'
 Vue.use(VueRouter)
 
 const routes = [{
+  path: '*', // 陪陪任何 匹配不到路由的组件
+  component: () => import('@/views/404')
+}, {
   path: '/',
   redirect: '/login'
 }, {
