@@ -26,7 +26,10 @@
                 </el-form-item>
             </el-form>
             <!-- 头像信息 -->
+            <!-- :show-file-list="false" 不显示上传内容 -->
+            <el-upload title="点击上传头像" :http-request="uploadImg" :show-file-list="false">
             <img :src="formData.photo ? formData.photo :defaultImg" alt="" class="head-upload">
+            </el-upload>
         </el-card>
 </template>
 
@@ -50,6 +53,18 @@ export default {
     }
   },
   methods: {
+    // 上传头像方法
+    uploadImg (params) {
+      const data = new FormData()
+      data.append('photo', params.file)
+      this.$axios({
+        url: '/user/photo',
+        method: 'patch',
+        data // ES6 简写方式
+      }).then(ser => {
+        this.formData.photo = ser.data.photo
+      })
+    },
     // 保存数据并手动校验表单
     saveUser () {
       this.$refs.myForm.validate().then(() => {
