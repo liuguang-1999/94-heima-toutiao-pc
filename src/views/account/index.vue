@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import eventBus from '@/utils/eventBus.js'
 export default {
   data () {
     return {
@@ -63,6 +64,7 @@ export default {
         data // ES6 简写方式
       }).then(ser => {
         this.formData.photo = ser.data.photo
+        eventBus.$emit('updataUser') // 头像 监听修改
       })
     },
     // 保存数据并手动校验表单
@@ -76,7 +78,8 @@ export default {
           data: this.formData
         }).then(ser => {
           this.$message.success('保存用户信息成功')
-          this.getUserInfo() // 成功后 从新渲染 页面
+          // 在这里 写 eventBus 的触发事件
+          eventBus.$emit('updataUser') // 用户名 监听修改
         }).catch(() => {
           this.$message.error('修改失败')
         })

@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import eventBus from '@/utils/eventBus.js' // 公共监听 文件
 export default {
   data () {
     return {
@@ -34,13 +35,23 @@ export default {
     }
   },
   created () {
-    this.$axios({
-      url: '/user/profile' // 请求地址
-    }).then(ser => {
-      this.userinfor = ser.data // 获取的数据赋值给 userinfor:用户个人信息
+    this.gitAlldata() // 组件初始化 执行获取数据 方法
+    // 在这个位置开启监听
+    eventBus.$on('updataUser', () => {
+      // 如果触发了 updataUser 事件 事件内部 就会执行逻辑
+      // 有人修改信息 触发了 updataUser 方法 内部就会执行 gitAlldata方法 来重新渲染页面数据
+      this.gitAlldata()
     })
   },
   methods: {
+    // 获取 信息数据方法
+    gitAlldata () {
+      this.$axios({
+        url: '/user/profile' // 请求地址
+      }).then(ser => {
+        this.userinfor = ser.data // 获取的数据赋值给 userinfor:用户个人信息
+      })
+    },
     handleCommand (command) {
       if (command === 'infor') {
         alert('敬请期待!')
