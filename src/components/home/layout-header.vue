@@ -3,8 +3,8 @@
   <el-row class="layout-header" type="flex" align="middle">
    <!-- 左侧头部栏 -->
       <el-col :span="12" class="leftr">
-          <i class="el-icon-s-fold"></i>
-          <span>江苏传智播客教育科技股份有限公司</span>
+          <i @click="collapse = !collapse" :class="{ 'el-icon-s-unfold':!collapse,'el-icon-s-fold':collapse }" style="cursor: pointer; transition: all 2s;"></i>
+          <span style="user-select: none; ">江苏传智播客教育科技股份有限公司</span>
       </el-col>
   <!-- 右侧头部栏 -->
       <el-col :span="12" class="right">
@@ -13,7 +13,7 @@
           <!-- 下拉菜单 -->
           <el-dropdown trigger="hover" @command="handleCommand">
               <span class="el-dropdown-link" style="cursor: pointer;">
-                {{userinfor.name}}<i class="el-icon-arrow-down el-icon--right"></i>
+                <span style="user-select: none;">{{userinfor.name}}</span><i class="el-icon-arrow-down el-icon--right"></i>
              </span>
              <el-dropdown-menu slot="dropdown" >
                 <el-dropdown-item command="infor">个人信息</el-dropdown-item>
@@ -31,7 +31,13 @@ import eventBus from '@/utils/eventBus.js' // 公共监听 文件
 export default {
   data () {
     return {
-      userinfor: {} // 用户个人信息
+      userinfor: {}, // 用户个人信息
+      collapse: true // 顶部栏 初始状态 不是折叠
+    }
+  },
+  watch: { // 用来监听 我的 collapse 折叠开关的 值改变事件 利用 eventBus 来通知 侧边栏组件 做出响应
+    collapse () {
+      eventBus.$emit('changeCollapse', this.collapse)
     }
   },
   created () {

@@ -2,11 +2,11 @@
   <div class="layout-aside">
       <!-- 头部Log -->
       <div class="title">
-          <img src="../../assets/logo_admin.png" alt="">
+          <img :src="collapse? minImg:BigImg" alt="">
       </div>
       <!-- 侧边栏菜单 -->
       <!-- :router="true" 开启路由模式  饿了么UI实现的 -->
-      <el-menu background-color = "#323745" text-color = "#adafb5" :router="true">
+      <el-menu background-color = "#323745" text-color = "#adafb5" :router="true" :collapse="collapse">
         <el-menu-item index="/home">
             <i class="el-icon-s-home"></i>
             <span slot="title">首页</span>
@@ -43,14 +43,21 @@
 </template>
 
 <script>
-export default {
 
+export default {
+  props: ['collapse'],
+  data () {
+    return {
+      BigImg: require('../../assets/logo_admin.png'),
+      minImg: require('../../assets/toutiao.png')
+    }
+  }
 }
 </script>
 
 <style lang='less' scoped>
 .layout-aside {
-    width: 230px;
+    // width: 230px;
     background-color: #2e2f32;
     height: 100vh;
     .title {

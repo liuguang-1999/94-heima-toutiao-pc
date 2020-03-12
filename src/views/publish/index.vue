@@ -153,7 +153,6 @@ export default {
           // 如果发布成功了 就应该去 内容列表
           this.$router.push('/home/articles')
         }).catch(() => {
-          debugger
           this.$message.error('操作失败!') // 失败提示
         })
       })
